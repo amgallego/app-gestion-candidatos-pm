@@ -1,15 +1,33 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { end_points } from "../services/api"
 
 const Login = () => {
   const [user, setUser] = useState("")
   const [password, setPassword] = useState("")
   const [remember, setRemember] = useState(false)
+  const [users, setUsers] = useState([])
+
+  function getUsers(){
+    fetch(end_points.users)
+    .then((response) => response.json())
+    .then ((data) => setUsers(data))
+    .catch((error) =>  console.log(error))
+  }
+
+  useEffect(() => {
+    getUsers()
+  }, [])
+
+  function findUser() {
+  let auth = users.find((item)=> user == item.username && password == item.password)
+  return auth
+  }
 
   function signIn(e) {
     e.preventDefault()
     if (user === "" || password === "") return alert("Login or password is empty")
-    if (user === "admin" && password === "admin") return alert("Welcome admin")
-    if (user !== "admin" || password !== "admin") return alert("Login or password is incorrect")
+    if (findUser()) return alert("Welcome admin")
+    if (findUser() == "undefined") return alert("Login or password is incorrect")
   }
 
   return (
