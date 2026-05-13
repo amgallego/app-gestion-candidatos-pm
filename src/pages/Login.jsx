@@ -1,47 +1,66 @@
-import { useState, useEffect } from "react"
-import { end_points } from "../services/api"
-import { redirectAlert } from "../helpers/alerts"
-import { saveLocalStorage } from "../helpers/local-storage"
-import { Link } from "react-router-dom"
+import { useState, useEffect } from "react";
+import { end_points } from "../services/api";
+import { redirectAlert } from "../helpers/alerts";
+import { saveLocalStorage } from "../helpers/local-storage";
+import { Link } from "react-router-dom";
+import { generateToken } from "../helpers/generators";
 
 const Login = () => {
-  const [user, setUser] = useState("")
-  const [password, setPassword] = useState("")
-  const [remember, setRemember] = useState(false)
-  const [users, setUsers] = useState([])
+  const [user, setUser] = useState("");
+  const [password, setPassword] = useState("");
+  const [remember, setRemember] = useState(false);
+  const [users, setUsers] = useState([]);
 
   function getUsers() {
     fetch(end_points.users)
       .then((response) => response.json())
       .then((data) => setUsers(data))
-      .catch((error) => console.log(error))
+      .catch((error) => console.log(error));
   }
 
   useEffect(() => {
-    getUsers()
-  }, [])
+    getUsers();
+  }, []);
 
   function findUser() {
-    let auth = users.find((item) => user == item.username && password == item.password)
-    return auth
+    let auth = users.find(
+      (item) => user == item.username && password == item.password,
+    );
+    return auth;
   }
 
   function signIn(e) {
-    e.preventDefault()
-    if (user === "" || password === "") return redirectAlert("Campos Vacíos", "El campo usuario y/o contraseña está vacío", "/login", "warning")
+    e.preventDefault();
+    if (user === "" || password === "")
+      return redirectAlert(
+        "Campos Vacíos",
+        "El campo usuario y/o contraseña está vacío",
+        "/login",
+        "warning",
+      );
     if (findUser()) {
-      saveLocalStorage("user", findUser())
-      redirectAlert("Bienvenido al aistema", "Será redireccionado al dashboard", "/dashboard", "success")
-      return
+      saveLocalStorage("token", generateToken());
+      saveLocalStorage("user", findUser());
+      redirectAlert(
+        "Bienvenido al aistema",
+        "Será redireccionado al dashboard",
+        "/dashboard",
+        "success",
+      );
+      return;
     }
-    if (findUser() == undefined) return redirectAlert("Error de credenciales", "Usuario y/o conttaseña incorrecto", "/login", "error")
+    if (findUser() == undefined)
+      return redirectAlert(
+        "Error de credenciales",
+        "Usuario y/o conttaseña incorrecto",
+        "/login",
+        "error",
+      );
   }
 
   return (
     <div className="form-login-container">
-      <div
-        class="w-80 rounded-lg shadow h-auto p-6 bg-white relative overflow-hidden"
-      >
+      <div class="w-80 rounded-lg shadow h-auto p-6 bg-white relative overflow-hidden">
         <div class="flex flex-col justify-center items-center space-y-2">
           <h2 class="text-2xl font-medium text-slate-700">Login</h2>
           <p class="text-slate-500">Enter details below.</p>
@@ -54,7 +73,9 @@ const Login = () => {
               id="username"
               name="username"
               type="text"
-              onChange={(e) => { setUser(e.target.value) }}
+              onChange={(e) => {
+                setUser(e.target.value);
+              }}
             />
           </div>
           <div>
@@ -64,7 +85,9 @@ const Login = () => {
               id="password"
               name="password"
               type="password"
-              onChange={function (e) { setPassword(e.target.value) }}
+              onChange={function (e) {
+                setPassword(e.target.value);
+              }}
             />
           </div>
           <div class="flex items-center justify-between">
@@ -97,9 +120,8 @@ const Login = () => {
           </p>
         </form>
       </div>
-
     </div>
-  )
-}
+  );
+};
 
-export default Login
+export default Login;

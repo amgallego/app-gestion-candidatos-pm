@@ -7,6 +7,7 @@ import Candidates from "../pages/Candidates";
 import Offers from "../pages/Offers";
 import CreateOffer from "../pages/CreateOffer";
 import EditOffer from "../pages/EditOffer";
+import ProtectedRoute from "../pages/ProtectedRoute";
 export let routerApp = [
   {
     path: "/",
@@ -22,7 +23,7 @@ export let routerApp = [
   },
   {
     path: "/dashboard/",
-    element: <Dashboard />,
+    element: <ProtectedRoute componente={<Dashboard />} />,
     children: [
       {
         path: "board/",
