@@ -26,6 +26,7 @@ function EditOffer() {
         setCompany(data.company);
         setLocation(data.location);
         setModality(data.modality);
+        setSeniority(data.seniority);
         setSalaryMin(data.salaryMin);
         setSalaryMax(data.salaryMax);
         setCurrency(data.currency);
@@ -38,6 +39,16 @@ function EditOffer() {
   useEffect(() => {
     fetchOffer();
   }, []);
+
+  function updateOffer() {
+    let offer = { title, company, location };
+    fetch(end_points.offers + "/" + id, {
+      method: "PATCH",
+      body: JSON.stringify(offer),
+    })
+      .then((response) => response.json())
+      .then((data) => console.log(data));
+  }
 
   return (
     <section className="mt-6">
@@ -74,7 +85,7 @@ function EditOffer() {
             <label className="text-xs font-medium text-slate-600">Estado</label>
             <select
               value={status}
-              onChange={(e)=> setStatus(e.target.value)}
+              onChange={(e) => setStatus(e.target.value)}
               className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-900 outline-none ring-blue-700/20 focus:ring-2"
             >
               <option value="open">open</option>
@@ -88,7 +99,7 @@ function EditOffer() {
             <input
               type="text"
               value={title}
-              onChange={(e)=> setTitle(e.target.value)}
+              onChange={(e) => setTitle(e.target.value)}
               placeholder="Backend Developer (Node.js)"
               className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-900 outline-none ring-blue-700/20 focus:ring-2"
             />
@@ -100,7 +111,7 @@ function EditOffer() {
             </label>
             <input
               value={company}
-              onChange={(e)=> setCompany(e.target.value)}
+              onChange={(e) => setCompany(e.target.value)}
               type="text"
               placeholder="AndesFintech"
               className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-900 outline-none ring-blue-700/20 focus:ring-2"
@@ -113,7 +124,7 @@ function EditOffer() {
             </label>
             <input
               value={location}
-              onChange={(e)=> setLocation(e.target.value)}
+              onChange={(e) => setLocation(e.target.value)}
               type="text"
               placeholder="Bogotá, CO"
               className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-900 outline-none ring-blue-700/20 focus:ring-2"
@@ -126,7 +137,7 @@ function EditOffer() {
             </label>
             <select
               value={modality}
-              onChange={(e)=> setModality(e.target.value)}
+              onChange={(e) => setModality(e.target.value)}
               className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-900 outline-none ring-blue-700/20 focus:ring-2"
             >
               <option value="Hybrid">Hybrid</option>
@@ -141,7 +152,7 @@ function EditOffer() {
             </label>
             <select
               value={seniority}
-              onChange={(e)=> setSeniority(e.target.value)}
+              onChange={(e) => setSeniority(e.target.value)}
               className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-900 outline-none ring-blue-700/20 focus:ring-2"
             >
               <option value="Junior">Junior</option>
@@ -156,7 +167,7 @@ function EditOffer() {
             </label>
             <input
               value={salaryMin}
-              onChange={(e)=> setSalaryMin(e.target.value)}
+              onChange={(e) => setSalaryMin(e.target.value)}
               type="number"
               placeholder="5500"
               className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-900 outline-none ring-blue-700/20 focus:ring-2"
@@ -169,7 +180,7 @@ function EditOffer() {
             </label>
             <input
               value={salaryMax}
-              onChange={(e)=> setSalaryMax(e.target.value)}
+              onChange={(e) => setSalaryMax(e.target.value)}
               type="number"
               placeholder="7500"
               className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-900 outline-none ring-blue-700/20 focus:ring-2"
@@ -180,7 +191,7 @@ function EditOffer() {
             <label className="text-xs font-medium text-slate-600">Moneda</label>
             <select
               value={currency}
-              onChange={(e)=> setCurrency(e.target.value)}
+              onChange={(e) => setCurrency(e.target.value)}
               className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-900 outline-none ring-blue-700/20 focus:ring-2"
             >
               <option value="USD">USD</option>
@@ -195,7 +206,7 @@ function EditOffer() {
             </label>
             <input
               value={recruiterId}
-              onChange={(e)=> setRecruiterId(e.target.value)}
+              onChange={(e) => setRecruiterId(e.target.value)}
               type="number"
               placeholder="2"
               className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-900 outline-none ring-blue-700/20 focus:ring-2"
@@ -206,11 +217,18 @@ function EditOffer() {
             <label className="text-xs font-medium text-slate-600">
               Tech stack
             </label>
-            <input
-              type="text"
-              placeholder="Node.js, TypeScript, PostgreSQL, Docker"
-              className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-900 outline-none ring-blue-700/20 focus:ring-2"
-            />
+            {techStack.map((item) => (
+              <label className="flex items-center gap-2">
+                <input
+                  onChange={(e) => setTechStack(e.target.value)}
+                  type="checkbox"
+                  name="techStack"
+                  value="Node.js"
+                  className="h-4 w-4"
+                />
+                {item}
+              </label>
+            ))}
           </div>
 
           <div className="flex flex-wrap items-center justify-end gap-2 pt-2 md:col-span-2">
@@ -221,6 +239,7 @@ function EditOffer() {
               Cancelar
             </Link>
             <button
+              onClick={updateOffer}
               type="button"
               className="rounded-lg bg-blue-700 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-800"
             >

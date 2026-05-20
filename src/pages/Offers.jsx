@@ -84,6 +84,12 @@ function Offers() {
                   </span>
                 </div>
                 <div className="flex items-center justify-between gap-3">
+                  <span className="text-slate-500">Fecha</span>
+                  <span className="font-medium text-slate-900">
+                    {item.postedAt}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between gap-3">
                   <span className="text-slate-500">Rango</span>
                   <span className="font-medium text-slate-900">
                     {item.currency ?? "USD"} {item.salaryMin ?? "—"} -{" "}
